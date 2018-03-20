@@ -35,6 +35,7 @@ function createQueryType (spaceGraph, name = 'Query') {
 
 function createQueryFields (spaceGraph) {
   const ctIdToType = {};
+  const extraArgs = ['slug'];
 
   return spaceGraph.reduce((acc, ct) => {
     const defaultFieldsThunk = () => {
@@ -51,6 +52,10 @@ function createQueryFields (spaceGraph) {
       return acc;
     }, defaultFieldsThunk());
 
+    const hasField = (name) => {
+      return ct.fields.find(o => o.id === name)
+    }
+
     const Type = ctIdToType[ct.id] = new GraphQLObjectType({
       name: ct.names.type,
       interfaces: [EntryType],
@@ -61,21 +66,35 @@ function createQueryFields (spaceGraph) {
       }
     });
 
-    acc[ct.names.field] = {
+    // one
+    const entry = acc[ct.names.field] = {
       type: Type,
-      args: {id: {type: IDType}},
-      resolve: (_, args, ctx) => ctx.entryLoader.get(args.id, ct.id)
+      args: {
+        id: {type: IDType},
+        locale: {type: GraphQLString}
+      },
+      resolve: (_, args, ctx) => ctx.entryLoader.get(ct.id, args)
     };
 
-    acc[ct.names.collectionField] = {
+    // many
+    const list = acc[ct.names.collectionField] = {
       type: new GraphQLList(Type),
       args: {
         q: {type: GraphQLString},
         skip: {type: GraphQLInt},
-        limit: {type: GraphQLInt}
+        limit: {type: GraphQLInt},
+        locale: {type: GraphQLString}
       },
       resolve: (_, args, ctx) => ctx.entryLoader.query(ct.id, args)
     };
+
+    // append additional args to many
+    extraArgs.forEach(a => {
+      if (hasField(a)) {
+        // console.log(`${ct.names.collectionField} has field ${a}`)
+        list.args[a] = {type: GraphQLString}
+      }
+    })
 
     acc[`_${ct.names.collectionField}Meta`] = {
       type: CollectionMetaType,
