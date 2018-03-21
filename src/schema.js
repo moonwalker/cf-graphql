@@ -82,7 +82,8 @@ function createQueryFields(spaceGraph) {
       type: Type,
       args: {
         id: { type: GraphQLID },
-        locale: { type: GraphQLString }
+        locale: { type: GraphQLString },
+        include: { type: GraphQLInt }
       },
       resolve: (_, args, ctx) => ctx.entryLoader.get(ct.id, args)
     };
