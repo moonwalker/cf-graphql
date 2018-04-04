@@ -60,11 +60,7 @@ function createQueryFields(spaceGraph) {
     }
 
     const isOwnField = (f) => {
-      const t = f.type;
-      return t === "String" ||
-        t === "Int" ||
-        t === "Float" ||
-        t === "Bool";
+      return !(/Link/.test(f.type));
     }
 
     const Type = ctIdToType[ct.id] = new GraphQLObjectType({
