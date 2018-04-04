@@ -84,7 +84,8 @@ function createQueryFields(spaceGraph) {
         id: { type: GraphQLID },
         locale: { type: GraphQLString },
         include: { type: GraphQLInt },
-        select: { type: GraphQLString }
+        select: { type: GraphQLString },
+        order: { type: GraphQLString }
       },
       resolve: (_, args, ctx) => ctx.entryLoader.get(ct.id, args)
     };
@@ -98,6 +99,7 @@ function createQueryFields(spaceGraph) {
         limit: { type: GraphQLInt },
         include: { type: GraphQLInt },
         select: { type: GraphQLString },
+        order: { type: GraphQLString },
         q: { type: GraphQLString }
       },
       resolve: (_, args, ctx) => ctx.entryLoader.query(ct.id, args)
