@@ -60,7 +60,25 @@ function createQueryFields(spaceGraph) {
     }
 
     const isOwnField = (f) => {
-      return !(/Link/.test(f.type));
+      if (!/Link/.test(f.type)) {
+        let type = f.type;
+        const match = f.type.match(/Array<(.+)>/)
+        if (match && match[1]) {
+          type = match[1]
+        }
+        switch (type) {
+          case "Int":
+            return GraphQLInt;
+          case "Float":
+            return GraphQLFloat;
+          case "Bool":
+            return GraphQLBoolean;
+          case "String":
+          default:
+            return GraphQLString;
+        }
+      }
+      return null;
     }
 
     const Type = ctIdToType[ct.id] = new GraphQLObjectType({
@@ -112,7 +130,7 @@ function createQueryFields(spaceGraph) {
     ct.fields.forEach(a => {
       const t = isOwnField(a)
       if (t) {
-        list.args[a.id] = { type: GraphQLString }
+        list.args[a.id] = { type: t }
       }
     })
 
