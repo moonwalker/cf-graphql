@@ -61,23 +61,22 @@ function createQueryFields(spaceGraph) {
 
     const isOwnField = (f) => {
       if (!/Link/.test(f.type)) {
-        // let type = f.type;
-        // const match = f.type.match(/Array<(.+)>/)
-        // if (match && match[1]) {
-        //   type = match[1]
-        // }
-        // switch (type) {
-        //   case "Int":
-        //     return GraphQLInt;
-        //   case "Float":
-        //     return GraphQLFloat;
-        //   case "Bool":
-        //     return GraphQLBoolean;
-        //   case "String":
-        //   default:
-        //     return GraphQLString;
-        // }
-        return GraphQLString;
+        let type = f.type;
+        const match = f.type.match(/Array<(.+)>/)
+        if (match && match[1]) {
+          type = match[1]
+        }
+        switch (type) {
+          case "Int":
+            return GraphQLInt;
+          case "Float":
+            return GraphQLFloat;
+          case "Bool":
+            return GraphQLBoolean;
+          case "String":
+          default:
+            return GraphQLString;
+        }
       }
       return null;
     }
