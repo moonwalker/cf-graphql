@@ -95,11 +95,10 @@ function createQueryFields(spaceGraph) {
     const entry = acc[ct.names.field] = {
       type: Type,
       args: {
-        id: { type: GraphQLID },
-        locale: { type: GraphQLString },
-        include: { type: GraphQLInt },
-        select: { type: GraphQLString },
-        order: { type: GraphQLString }
+        _id: { type: GraphQLID },
+        _locale: { type: GraphQLString },
+        _include: { type: GraphQLInt },
+        _select: { type: GraphQLString }
       },
       resolve: (_, args, ctx) => ctx.entryLoader.get(ct.id, args)
     };
@@ -108,13 +107,13 @@ function createQueryFields(spaceGraph) {
     const list = acc[ct.names.collectionField] = {
       type: new GraphQLList(Type),
       args: {
-        locale: { type: GraphQLString },
-        skip: { type: GraphQLInt },
-        limit: { type: GraphQLInt },
-        include: { type: GraphQLInt },
-        select: { type: GraphQLString },
-        order: { type: GraphQLString },
-        q: { type: GraphQLString }
+        _locale: { type: GraphQLString },
+        _skip: { type: GraphQLInt },
+        _limit: { type: GraphQLInt },
+        _include: { type: GraphQLInt },
+        _select: { type: GraphQLString },
+        _order: { type: GraphQLString },
+        _q: { type: GraphQLString }
       },
       resolve: (_, args, ctx) => ctx.entryLoader.query(ct.id, args)
     };
