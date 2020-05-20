@@ -100,11 +100,14 @@ function createQueryFields(spaceGraph) {
         includeArg: { type: GraphQLInt },
         selectArg: { type: GraphQLString }
       },
-      resolve: (_, args, ctx) => ctx.entryLoader.get(ct.id, {
-        id: args.idArg,
-        include: args.includeArg,
-        select: args.selectArg
-      })
+      resolve: (_, args, ctx) => {
+        const { idArg: id, localeArg: locale, includeArg: include, selectArg: select, ...rest } = args;
+        const params = { locale, include, select, ...rest }
+        if (typeof id != 'undefined') {
+          params.id = id;
+        }
+        return ctx.entryLoader.get(ct.id, params)
+      }
     };
 
     // many
@@ -119,15 +122,10 @@ function createQueryFields(spaceGraph) {
         orderArg: { type: GraphQLString },
         qArg: { type: GraphQLString }
       },
-      resolve: (_, args, ctx) => ctx.entryLoader.query(ct.id, {
-        locale: args.localeArg,
-        skip: args.skipArg,
-        limit: args.limitArg,
-        include: args.includeArg,
-        select: args.selectArg,
-        order: args.orderArg,
-        q: args.qArg
-      })
+      resolve: (_, args, ctx) => {
+        const { localeArg: locale, skipArg: skip, limitArg: limit, includeArg: include, selectArg: select, orderArg: order, qArg: q, ...rest } = args;
+        return ctx.entryLoader.query(ct.id, { locale, skip, limit, include, select, order, q, ...rest })
+      }
     };
 
     // append additional args to one
