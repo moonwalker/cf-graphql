@@ -95,27 +95,39 @@ function createQueryFields(spaceGraph) {
     const entry = acc[ct.names.field] = {
       type: Type,
       args: {
-        _id: { type: GraphQLID },
-        _locale: { type: GraphQLString },
-        _include: { type: GraphQLInt },
-        _select: { type: GraphQLString }
+        idArg: { type: GraphQLID },
+        localeArg: { type: GraphQLString },
+        includeArg: { type: GraphQLInt },
+        selectArg: { type: GraphQLString }
       },
-      resolve: (_, args, ctx) => ctx.entryLoader.get(ct.id, args)
+      resolve: (_, args, ctx) => ctx.entryLoader.get(ct.id, {
+        id: idArg,
+        include: includeArg,
+        select: selectArg
+      })
     };
 
     // many
     const list = acc[ct.names.collectionField] = {
       type: new GraphQLList(Type),
       args: {
-        _locale: { type: GraphQLString },
-        _skip: { type: GraphQLInt },
-        _limit: { type: GraphQLInt },
-        _include: { type: GraphQLInt },
-        _select: { type: GraphQLString },
-        _order: { type: GraphQLString },
-        _q: { type: GraphQLString }
+        localeArg: { type: GraphQLString },
+        skipArg: { type: GraphQLInt },
+        limitArg: { type: GraphQLInt },
+        includeArg: { type: GraphQLInt },
+        selectArg: { type: GraphQLString },
+        orderArg: { type: GraphQLString },
+        qArg: { type: GraphQLString }
       },
-      resolve: (_, args, ctx) => ctx.entryLoader.query(ct.id, args)
+      resolve: (_, args, ctx) => ctx.entryLoader.query(ct.id, {
+        locale: localeArg,
+        skip: skipArg,
+        limit: limitArg,
+        include: includeArg,
+        select: selectArg,
+        order: orderArg,
+        q: qArg
+      })
     };
 
     // append additional args to one
